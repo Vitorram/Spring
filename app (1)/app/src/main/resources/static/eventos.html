@@ -22,9 +22,31 @@
         .btn-del { background: red; color: white; padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer; }
         .meta { color: #333; font-size: 14px; margin-top: 8px; }
         .coords { margin-top: 10px; padding: 10px; background: #f7f7f7; border-radius: 6px; font-weight: 500; }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: black;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s;
+            font-weight: bold;
+            z-index: 2000;
+        }
+        .toast.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
 
 <header>
     <a href="eventos.html">Eventos</a>
@@ -70,12 +92,21 @@
 const API_EVENTOS = "https://improved-couscous-pj7g97g99p6xh945g-8080.app.github.dev/eventos";
 const API_ALOC = "https://improved-couscous-pj7g97g99p6xh945g-8080.app.github.dev/alocacoes";
 
-// ID do usuário logado (pode vir do login)
+// ID do usuário logado
 const usuarioId = 1;
 
 let editingId = null;
 
-// Carregar alocações no SELECT
+/* ----------- TOAST ----------- */
+function showToast(msg, ok = true) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.background = ok ? "black" : "red";
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2000);
+}
+
+/* ----------- CARREGAR ALOCAÇÕES ----------- */
 async function carregarAlocacoes() {
     try {
         const res = await fetch(API_ALOC);
@@ -88,7 +119,7 @@ async function carregarAlocacoes() {
     } catch(e) { console.error("Erro ao carregar alocações", e); }
 }
 
-// Carregar eventos
+/* ----------- CARREGAR EVENTOS ----------- */
 async function carregarEventos() {
     try {
         const res = await fetch(API_EVENTOS);
@@ -99,6 +130,7 @@ async function carregarEventos() {
             const lat = e.alocacao?.latitude ?? "N/A";
             const lng = e.alocacao?.longitude ?? "N/A";
             const nomeUsuario = e.nomeUsuario ?? "Sem usuário";
+
             div.innerHTML += `
                 <div class="evento">
                     <div class="evento-header">
@@ -117,9 +149,10 @@ async function carregarEventos() {
     } catch(e) { console.error("Erro ao carregar eventos", e); }
 }
 
-// Salvar evento (criar / editar)
+/* ----------- SALVAR EVENTO ----------- */
 document.getElementById("formEvento").addEventListener("submit", async (ev) => {
     ev.preventDefault();
+
     const dados = {
         titulo: document.getElementById("titulo").value,
         descricao: document.getElementById("descricao").value,
@@ -128,30 +161,40 @@ document.getElementById("formEvento").addEventListener("submit", async (ev) => {
         dataFim: document.getElementById("dataFim").value,
         capacidade: Number(document.getElementById("capacidade").value)
     };
+
     const alocacaoId = Number(document.getElementById("alocacaoId").value);
+
     const url = editingId 
         ? `${API_EVENTOS}/${editingId}?usuarioId=${usuarioId}&alocacaoId=${alocacaoId}` 
         : `${API_EVENTOS}?usuarioId=${usuarioId}&alocacaoId=${alocacaoId}`;
+
     const method = editingId ? "PUT" : "POST";
+
     try {
         const resp = await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados)
         });
+
         if (!resp.ok) throw new Error("Erro ao salvar");
+
         resetForm();
         carregarEventos();
+
+        showToast(editingId ? "Evento atualizado!" : "Evento criado!");
+
     } catch(e) {
         console.error(e);
-        alert("Erro ao salvar evento (veja console).");
+        showToast("Erro ao salvar!", false);
     }
 });
 
-// Editar
+/* ----------- EDITAR EVENTO ----------- */
 async function editarEvento(id) {
     const r = await fetch(`${API_EVENTOS}/${id}`);
     const e = await r.json();
+
     editingId = id;
     document.getElementById("titulo").value = e.titulo;
     document.getElementById("descricao").value = e.descricao;
@@ -160,19 +203,23 @@ async function editarEvento(id) {
     document.getElementById("dataFim").value = e.dataFim;
     document.getElementById("capacidade").value = e.capacidade;
     document.getElementById("alocacaoId").value = e.alocacaoId ?? "";
+
     document.getElementById("formTitle").textContent = "Editar Evento";
     document.getElementById("submitBtn").textContent = "Salvar";
     document.getElementById("cancelEdit").style.display = "block";
 }
 
-// Excluir
+/* ----------- EXCLUIR ----------- */
 async function removerEvento(id) {
     if (!confirm("Tem certeza que deseja excluir?")) return;
+
     await fetch(`${API_EVENTOS}/${id}`, { method: "DELETE" });
+
     carregarEventos();
+    showToast("Evento excluído!");
 }
 
-// Resetar formulário
+/* ----------- RESETAR ----------- */
 function resetForm() {
     editingId = null;
     document.getElementById("formEvento").reset();
@@ -181,10 +228,10 @@ function resetForm() {
     document.getElementById("cancelEdit").style.display = "none";
 }
 
-// Cancelar edição
+/* ----------- CANCELAR EDIÇÃO ----------- */
 document.getElementById("cancelEdit").addEventListener("click", resetForm);
 
-// Inicialização
+/* ----------- INICIALIZAÇÃO ----------- */
 carregarAlocacoes();
 carregarEventos();
 </script>

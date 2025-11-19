@@ -3,56 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <title>Home - Usuário</title>
+
     <style>
-    body {
-        font-family: "Inter", Arial, sans-serif;
-        margin: 0;
-        padding: 50px;
-        text-align: center;
-        background: #f4e9dc; /* tom bege claro semelhante ao da imagem */
-        color: #2b2b2b;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #d8d8d8; /* fundo neutro */
+            font-family: "Inter", Arial, sans-serif;
+        }
 
-    h1 {
-        font-weight: 600;
-        font-size: 32px;
-        margin-bottom: 10px;
-    }
+        /* Caixa estilo glass */
+        .glass-box {
+            width: 380px;
+            padding: 40px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+            position: relative;
+        }
 
-    p {
-        font-size: 18px;
-        margin-bottom: 40px;
-        color: #574b44;
-    }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
 
-    button {
-        padding: 18px 40px;
-        margin: 15px;
-        font-size: 18px;
-        cursor: pointer;
-        border-radius: 12px;
-        border: 2px solid #d2c1ae; /* borda leve e suave */
-        background: #ffffff;
-        color: #333;
-        transition: 0.2s ease-in-out;
-        font-weight: 500;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+        p {
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 17px;
+        }
 
-    button:hover {
-        background: #ffb74d;     /* laranja suave como o ícone da barra lateral */
-        color: #fff;
-        border-color: #ffb74d;
-        transform: translateY(-3px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-</style>
+        /* Botões */
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
 
+        /* Botão Cadastro (claro) */
+        .btn-cadastro {
+            background: #ffffffcc;
+            color: #2f3b2f;
+            border: 2px solid #2f3b2f;
+        }
+
+        .btn-cadastro:hover {
+            background: #2f3b2f;
+            color: white;
+        }
+
+        /* Botão Login (escuro) */
+        .btn-login {
+            background: #2f3b2f;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background: #445544;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Bem-vindo ao Sistema</h1>
-    <p>Escolha uma opção:</p>
-    <button onclick="window.location.href='cadastro.html'">Cadastro</button>
-    <button onclick="window.location.href='login.html'">Login</button>
+
+    <div class="glass-box">
+
+        <h1>LINKTOUR</h1>
+        <p>Escolha uma opção:</p>
+
+        <button class="btn-cadastro" onclick="window.location.href='cadastro.html'">
+            Cadastro
+        </button>
+
+        <button class="btn-login" onclick="window.location.href='login.html'">
+            Login
+        </button>
+
+    </div>
+
 </body>
 </html>
