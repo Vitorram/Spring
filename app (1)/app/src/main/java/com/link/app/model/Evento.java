@@ -7,12 +7,16 @@ import java.time.LocalDate;
 @Data
 @Entity
 public class Evento {
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long idUsuario;
+    
 
     private LocalDate dataCriar;
 

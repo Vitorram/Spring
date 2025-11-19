@@ -6,6 +6,10 @@ import lombok.Data;
 @Data
 @Entity
 public class Alocacao {
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

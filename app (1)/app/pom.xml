@@ -23,7 +23,6 @@
     </properties>
 
     <dependencies>
-
         <!-- API WEB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -42,7 +41,10 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-
+        <dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-crypto</artifactId>
+</dependency>
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login de Usuário</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        form { padding: 20px; border: 1px solid #ccc; width: 350px; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px; width: 100%; cursor: pointer; }
+        .message { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="formLogin">
+        <label>Email:<input type="email" name="email" required></label>
+        <label>Senha:<input type="password" name="senha" required></label>
+        <button type="submit">Login</button>
+        <div class="message" id="mensagemLogin"></div>
+    </form>
+
+    <script>
+        const API_URL = 'https://improved-couscous-pj7g97g99p6xh945g-8080.app.github.dev/usuarios';
+        const formLogin = document.getElementById('formLogin');
+        const mensagemLogin = document.getElementById('mensagemLogin');
+
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                email: formLogin.email.value,
+                senha: formLogin.senha.value
+            };
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.text();
+                mensagemLogin.textContent = result;
+                mensagemLogin.style.color = res.ok ? 'green' : 'red';
+
+                // Redireciona para eventos.html se login for ok
+                if (res.ok) {
+                    window.location.href = 'eventos.html';
+                }
+            } catch {
+                mensagemLogin.textContent = 'Erro ao conectar com o servidor';
+                mensagemLogin.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

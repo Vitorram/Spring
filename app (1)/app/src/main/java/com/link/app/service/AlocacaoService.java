@@ -15,18 +15,23 @@ public class AlocacaoService {
         this.repository = repository;
     }
 
+    // Listar todas as alocações
     public List<Alocacao> listar() {
         return repository.findAll();
     }
 
+    // Buscar por ID
     public Alocacao buscarPorId(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Alocação não encontrada"));
     }
 
+    // Salvar nova alocação
     public Alocacao salvar(Alocacao alocacao) {
         return repository.save(alocacao);
     }
 
+    // Atualizar alocação existente
     public Alocacao atualizar(Long id, Alocacao nova) {
         return repository.findById(id)
                 .map(a -> {
@@ -39,9 +44,10 @@ public class AlocacaoService {
                     a.setFachada(nova.getFachada());
                     return repository.save(a);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Alocação não encontrada"));
     }
 
+    // Remover alocação
     public void remover(Long id) {
         repository.deleteById(id);
     }

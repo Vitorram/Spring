@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Usuário</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        form { padding: 20px; border: 1px solid #ccc; width: 350px; }
+        label { display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px; width: 100%; cursor: pointer; }
+        .message { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Cadastro de Usuário</h2>
+    <form id="formCadastro">
+        <label>Nome completo:<input type="text" name="nomeCompleto" required></label>
+        <label>Email:<input type="email" name="email" required></label>
+        <label>Telefone:<input type="text" name="telefone"></label>
+        <label>Senha:<input type="password" name="senha" required></label>
+        <label>Status:<input type="text" name="status" value="ATIVO"></label>
+        <label>CPF:<input type="text" name="cpf"></label>
+        <label>Preferências:<input type="text" name="preferencias"></label>
+        <label>Data de nascimento:<input type="date" name="nascimento"></label>
+        <label>Gênero:<input type="text" name="genero"></label>
+        <label>Parceiro:
+            <select name="parceiro">
+                <option value="false">Não</option>
+                <option value="true">Sim</option>
+            </select>
+        </label>
+        <label>Cidade (ID):<input type="number" name="cidade"></label>
+        <button type="submit">Cadastrar</button>
+        <div class="message" id="mensagemCadastro"></div>
+    </form>
+
+    <script>
+        const API_URL = 'https://improved-couscous-pj7g97g99p6xh945g-8080.app.github.dev/usuarios';
+        const formCadastro = document.getElementById('formCadastro');
+        const mensagemCadastro = document.getElementById('mensagemCadastro');
+
+        formCadastro.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                nomeCompleto: formCadastro.nomeCompleto.value,
+                email: formCadastro.email.value,
+                telefone: formCadastro.telefone.value,
+                senha: formCadastro.senha.value,
+                status: formCadastro.status.value,
+                cpf: formCadastro.cpf.value,
+                preferencias: formCadastro.preferencias.value,
+                nascimento: formCadastro.nascimento.value,
+                genero: formCadastro.genero.value,
+                parceiro: formCadastro.parceiro.value === 'true',
+                cidade: parseInt(formCadastro.cidade.value)
+            };
+            try {
+                const res = await fetch(`${API_URL}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.text();
+                mensagemCadastro.textContent = result;
+                mensagemCadastro.style.color = res.ok ? 'green' : 'red';
+            } catch {
+                mensagemCadastro.textContent = 'Erro ao conectar com o servidor';
+                mensagemCadastro.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
